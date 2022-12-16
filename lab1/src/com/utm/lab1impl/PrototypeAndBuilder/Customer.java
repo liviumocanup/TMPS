@@ -13,6 +13,10 @@ public class Customer extends User implements IClient, GymAtendee {
     private Double weight;
     private Double height;
 
+    public void setFirstName(String name){
+        firstName = name;
+    }
+
     public Customer() {
     }
 

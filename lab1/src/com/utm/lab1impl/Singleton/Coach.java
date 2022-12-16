@@ -3,11 +3,15 @@ package com.utm.lab1impl.Singleton;
 import com.utm.lab1impl.AbstractFactory.Staff;
 import com.utm.lab2impl.Adapter.Employee;
 import com.utm.lab2impl.Bridge.GymAtendee;
+import com.utm.lab3impl.Mediator.Mediator;
 
 public class Coach extends Staff implements Employee, GymAtendee {
     private static Coach instance = null;
 
+    Mediator mediator;
+    public Integer highDemandRate = 100;
     public String firstName;
+    public boolean yelledAt = false;
     public String lastName;
     public String email;
     public String phoneNumber;
@@ -49,6 +53,25 @@ public class Coach extends Staff implements Employee, GymAtendee {
     @Override
     public String getPayed(double amount) {
         return "I got "+amount+" more $ for my coaching services this month.";
+    }
+
+    @Override
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void askForBonus(){
+        mediator.askForBonus(300);
+    }
+
+    @Override
+    public String getJobTitle() {
+        return "Coach";
+    }
+
+    @Override
+    public void wereYelledAt(boolean b) {
+        yelledAt = b;
     }
 
     @Override

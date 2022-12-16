@@ -1,11 +1,13 @@
 package com.utm.lab2impl.Composite;
 
 import com.utm.lab2impl.Adapter.Employee;
+import com.utm.lab3impl.Mediator.Mediator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Manager implements Employee {
+    Mediator mediator;
     private final List<Employee> children = new ArrayList<>();
 
     public Manager(Employee... employees) {
@@ -30,5 +32,25 @@ public class Manager implements Employee {
     @Override
     public String getPayed(double amount) {
         return "I got payed " + amount + " for the month.";
+    }
+
+    @Override
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void yellAtEmployee(Employee employee){
+        System.out.println(employee.getJobTitle()+" yelled at.");
+        mediator.yelledAt(employee);
+    }
+
+    @Override
+    public String getJobTitle() {
+        return "Manager";
+    }
+
+    @Override
+    public void wereYelledAt(boolean b) {
+        System.out.println("Manager had a breakdown.");
     }
 }
