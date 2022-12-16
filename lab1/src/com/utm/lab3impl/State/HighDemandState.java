@@ -10,6 +10,7 @@ public class HighDemandState extends State{
         coach.highDemandRate = coach.highDemandRate+50;
     }
 
+    @Override
     public void highDemand(int payOffer){
         if(payOffer > coach.highDemandRate){
             System.out.println("Ok, I'll find time for one more customer.");

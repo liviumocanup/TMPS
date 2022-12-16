@@ -21,12 +21,12 @@ public class ToIBAN extends PaymentTemplate {
 
     void createIBANRequest(Customer customer, Coach coach, double amount) {
         System.out.println("The request has been successfully sent. It will be processed within 24hrs.");
-        wait(2000);
+        proccessRequest(2000);
         reduceFunds(customer);
         transferFunds(coach, amount);
     }
 
-    public static void wait(int ms) {
+    public static void proccessRequest(int ms) {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ex) {

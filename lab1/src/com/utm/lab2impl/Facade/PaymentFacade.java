@@ -14,7 +14,7 @@ public class PaymentFacade {
     }
 
     public void pay(Employee employee, double amount, String bankName) {
-        paymentApi.transferFunds(employee, amount);
+        paymentApi.transferFunds(employee, amount, bankName);
     }
 
     public void payP2P(Employee from, Employee to, double amount) {
