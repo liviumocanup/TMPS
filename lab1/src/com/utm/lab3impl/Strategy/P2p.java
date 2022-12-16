@@ -1,29 +1,57 @@
 package com.utm.lab3impl.Strategy;
 
+import com.utm.lab1impl.PrototypeAndBuilder.Customer;
 import com.utm.lab1impl.Singleton.Coach;
-import com.utm.lab2impl.Adapter.Employee;
 import com.utm.lab2impl.Facade.PaymentFacade;
 
-public class P2p implements PayStrategy {
-    private Coach coach;
-    private String name;
-    private String cardNumber;
+import java.util.Scanner;
+
+public class P2p implements PayStrategy{
+    private String customerName;
+    private String coachName;
+    private String customerCardNumber;
+    private String coachCardNumber;
 
     @Override
-    public void paymentDetails(String name, String cardNumber) {
-        this.name = name;
-        this.coach = findByName(name);
-        this.cardNumber = cardNumber;
+    public void collectPaymentDetails() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Insert your name: ");
+        this.customerName = scanner.nextLine();
+
+        System.out.println("Insert your card number: ");
+        this.customerCardNumber = scanner.nextLine();
+
+        System.out.println("Insert the receiver's name: ");
+        this.coachName = scanner.nextLine();
+
+        System.out.println("Insert the receiver's card number: ");
+        this.coachCardNumber = scanner.nextLine();
     }
 
     @Override
-    public void pay(int paymentAmount, Employee customer) {
+    public void pay(int paymentAmount) {
         PaymentFacade paymentFacade = new PaymentFacade();
-        paymentFacade.payP2P(coach, customer,paymentAmount);
+        paymentFacade.payP2P(findCustomerByName(
+                        this.customerName),
+                findCoachByName(this.coachName),
+                paymentAmount
+        );
     }
 
-    private Coach findByName(String name){
-        System.out.println("Found coach by name: "+ name);
-        return Coach.getInstance();
+    private Customer findCustomerByName(String name) {
+        System.out.println("Found customer by name: " + name);
+        Customer c = new Customer();
+        c.setFirstName(name);
+        c.cardNumber = this.customerCardNumber;
+        return c;
+    }
+
+    private Coach findCoachByName(String name) {
+        System.out.println("Found coach by name: " + name);
+        Coach c = Coach.getInstance();
+        c.firstName = name;
+        c.cardNumber = this.coachCardNumber;
+        return c;
     }
 }

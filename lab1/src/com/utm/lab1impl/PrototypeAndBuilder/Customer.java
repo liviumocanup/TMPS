@@ -5,6 +5,7 @@ import com.utm.lab2impl.Bridge.GymAtendee;
 
 public class Customer extends User implements IClient, GymAtendee {
     private String firstName;
+    public String cardNumber;
     private String lastName;
     private String email;
     private int age;

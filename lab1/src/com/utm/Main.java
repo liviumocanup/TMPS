@@ -21,9 +21,13 @@ import com.utm.lab3impl.Mediator.ManagerMediator;
 import com.utm.lab3impl.Strategy.BankInvoice;
 import com.utm.lab3impl.Strategy.P2p;
 import com.utm.lab3impl.Strategy.PayStrategy;
+import com.utm.lab3impl.Template.P2Payment;
+import com.utm.lab3impl.Template.PaymentTemplate;
+import com.utm.lab3impl.Template.ToIBAN;
 
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 public class Main {
 
@@ -104,13 +108,51 @@ public class Main {
 
     public static void lab3(){
         System.out.println("===Iterator===");
+        iterator();
+
+        System.out.println("\n===Mediator===");
+        ManagerMediator managerMediator = new ManagerMediator();
+        managerMediator.registerEmployee(Coach.getInstance());
+        managerMediator.registerEmployee(new Manager(Coach.getInstance()));
+        managerMediator.registerEmployee(new Cleaner());
+        managerMediator.startWorkingDay();
+
+        System.out.println("\n===Strategy===");
+        PayStrategy payStrategy = chooseStrategy();
+        payStrategy.collectPaymentDetails();
+        payStrategy.pay(300);
+
+
+        System.out.println("\n===State===");
+        Coach coach = Coach.getInstance();
+        coach.getState().free();
+        coach.getState().highDemand(300);
+        coach.getState().highDemand(600);
+        coach.getState().highDemand(20);
+        coach.getState().free();
+        coach.getState().vacation();
+        coach.getState().vacation();
+        coach.getState().highDemand(200);
+        coach.getState().vacation();
+        coach.getState().free();
+
+
+        System.out.println("\n===Template===");
+        Customer payingCustomer = new Customer();
+        payingCustomer.setFirstName("Dan");
+        payingCustomer.cardNumber = "524924312874";
+        PaymentTemplate payment = chooseTemplate();
+        payment.makePayment(payingCustomer, 150);
+    }
+
+    private static void iterator(){
         ClientList<Customer> clientList = new ClientList<>();
         Customer customer1 = new Customer();
-        customer1.setFirstName("1");
+        customer1.setFirstName("customer1");
         Customer customer2 = new Customer();
-        customer2.setFirstName("2");
+        customer2.setFirstName("customer2");
         Customer customer3 = new Customer();
-        customer3.setFirstName("3");
+        customer3.setFirstName("customer3");
         clientList.add(customer1); clientList.add(customer2); clientList.add(customer3);
 
         Iterator<Customer> iterator = clientList.iterator();
@@ -120,7 +162,7 @@ public class Main {
         }
         System.out.print("\nListIterator: ");
         iterator.remove();
-        customer3.setFirstName("4");
+        customer3.setFirstName("customer4");
 
         ListIterator<Customer> listIterator = clientList.listIterator();
         listIterator.add(customer3);
@@ -133,40 +175,35 @@ public class Main {
             System.out.print(listIterator.previous().getFirstName()+" ");
         }
         System.out.println(listIterator.next().getFirstName()+" ");
+    }
 
-        System.out.println("\n===Mediator===");
-        ManagerMediator managerMediator = new ManagerMediator();
-        managerMediator.registerEmployee(Coach.getInstance());
-        managerMediator.registerEmployee(new Manager(Coach.getInstance()));
-        managerMediator.registerEmployee(new Cleaner());
-        managerMediator.startWorkingDay();
+    private static PaymentTemplate chooseTemplate(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("""
+                Choose preferred template.
+                1 - P2P
+                2 - To IBAN.""");
+        int choice = scanner.nextInt();
 
-        System.out.println("\n===Strategy===");
-        Customer customer = new Customer();
-        PayStrategy payStrategy;
-        String whichStrategy = "P2P";
-        if(whichStrategy.equals("P2P"))
-            payStrategy = new P2p();
-        else payStrategy = new BankInvoice();
-        payStrategy.paymentDetails("Ivan Postolachi", "393929393939");
-        payStrategy.pay(300, (Employee) customer);
+        if (choice == 1) {
+            return new P2Payment("Ivan", "1111111111111111");
+        } else {
+            return new ToIBAN("Ivan", "222222222222222");
+        }
+    }
 
-        whichStrategy = "BankInvoice";
-        if(whichStrategy.equals("P2P"))
-            payStrategy = new P2p();
-        else payStrategy = new BankInvoice();
-        payStrategy.paymentDetails("MAIB", "121212121212");
-        payStrategy.pay(300, Coach.getInstance());
+    private static PayStrategy chooseStrategy(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("""
+                Choose preferred strategy.
+                1 - P2P
+                2 - Bank Invoice.""");
+        int choice = scanner.nextInt();
 
-//
-//        System.out.println("\n===Facade===");
-//        PaymentFacade paymentFacade = new PaymentFacade();
-//        paymentFacade.pay(manager2, 200);
-//        System.out.println();
-//        paymentFacade.payP2P(manager1, coach, 200);
-//
-//        System.out.println("\n===Proxy===");
-//        DistributeSalary distributeSalary = new ProxyPaymentCreation(coach);
-//        distributeSalary.grantPayment();
+        if (choice == 1) {
+            return new P2p();
+        } else {
+            return new BankInvoice();
+        }
     }
 }

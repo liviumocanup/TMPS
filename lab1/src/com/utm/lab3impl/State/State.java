@@ -9,9 +9,8 @@ public abstract class State {
         this.coach = coach;
     }
 
-    public abstract String free();
-    public abstract String highDemand();
-    public abstract String full();
+    public abstract void free();
+    public abstract void highDemand(int payOffer);
 
-    public abstract String vacation();
+    public abstract void vacation();
 }

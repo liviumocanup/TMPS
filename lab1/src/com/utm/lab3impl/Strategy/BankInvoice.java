@@ -1,7 +1,6 @@
 package com.utm.lab3impl.Strategy;
 
 import com.utm.lab1impl.Singleton.Coach;
-import com.utm.lab2impl.Adapter.Employee;
 import com.utm.lab2impl.Facade.PaymentFacade;
 
 import java.util.Scanner;
@@ -12,17 +11,30 @@ public class BankInvoice implements PayStrategy{
     private String cardNumber;
 
     @Override
-    public void paymentDetails(String name, String cardNumber) {
-        this.bankName = name;
-        this.cardNumber = cardNumber;
+    public void collectPaymentDetails() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Insert IBAN: ");
+
+        System.out.println("Insert the name of the bank: ");
+        this.bankName = scanner.nextLine();
+
+        System.out.println("Insert your card number: ");
+        this.cardNumber = scanner.nextLine();
+
+        System.out.print("Insert the receiver's IBAN: ");
         IBAN = scanner.nextLine();
     }
 
     @Override
-    public void pay(int paymentAmount, Employee coach) {
+    public void pay(int paymentAmount) {
+        System.out.println("Creating payment from: "+cardNumber);
         PaymentFacade paymentFacade = new PaymentFacade();
-        paymentFacade.pay(coach, paymentAmount);
+        paymentFacade.pay(findByIBAN(this.IBAN), paymentAmount, bankName);
+    }
+
+    private Coach findByIBAN(String IBAN){
+        System.out.println("Found coach by IBAN: "+ IBAN);
+        Coach c = Coach.getInstance();
+        c.IBAN = IBAN;
+        return c;
     }
 }
